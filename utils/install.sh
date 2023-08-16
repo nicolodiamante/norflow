@@ -4,37 +4,30 @@
 # Install Norflow
 #
 
-# Detect the OS if darwin then determines the OS version
-# (from macOS 12.6.1 Monterey or later).
-SW_VERS=$(sw_vers -buildVersion)
-OS_VERS=$(sed -E -e 's/([0-9]{2}).*/\1/' <<< "$SW_VERS")
-[[ "$OSTYPE" = darwin* && "$OS_VERS" -ge 21 ]] || exit 1
+# Validate OS and version
+if [[ "$OSTYPE" != darwin* ]]; then
+  echo "This script is only compatible with macOS."
+  exit 1
+fi
 
-# Defines the PATHs.
+SW_VERS=$(sw_vers -buildVersion)
+OS_VERS=$(sed -E -e 's/([0-9]{2}).*/\1/' <<<"$SW_VERS")
+if [[ "$OS_VERS" -lt 21 ]]; then
+  echo "Norflow requires macOS 12.6.1 Monterey or later."
+  exit 1
+fi
+
+# Define paths
 LIB_AGENTS="${HOME}/Library/LaunchAgents"
 AGENT="${LIB_AGENTS}/com.shell.Norflow.plist"
 
-if [[ ! -d "$LIB_AGENTS" ]]; then
- mkdir -p "${LIB_AGENTS}"
-fi
+# Create necessary directories
+mkdir -p "$LIB_AGENTS"
 
-cp -r ./agent/com.shell.Norflow.plist "${LIB_AGENTS}"
+# Install Norflow agent
+install -m 0644 ./agent/com.shell.Norflow.plist "$LIB_AGENTS"
 
+# Load the agent if it exists
 if [[ -f "${AGENT}" ]]; then
-  osascript -e '
-  tell application "Terminal"
-
-    set textToTypeOne to "launchctl load ~/Library/LaunchAgents/com.shell.Norflow.plist"
-
-    tell application "System Events"
-      (* Load the first job. *)
-      keystroke textToTypeOne
-
-      (* Wait a little bit to ensure that the job is loaded. *)
-      delay 0.5
-
-      keystroke return
-
-    end tell
-  end tell'
+  launchctl load "${AGENT}"
 fi
