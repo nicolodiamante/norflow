@@ -26,7 +26,7 @@ fi
 if [[ -z "$CMD" ]]; then
   echo 'No git, curl or wget available. Aborting!'
 else
-  echo 'Installing simple prompt...'
+  echo 'Installing norflow...'
   mkdir -p "$TARGET"
 
   if eval "$CMD"; then
