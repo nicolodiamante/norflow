@@ -7,7 +7,7 @@
 
 [Apple shortcuts][apple-shortcuts] is indeed a powerful tool that enables users to simplify their daily tasks and complete them with ease. With just a tap or a voice command, you can perform a wide range of actions, such as sending messages, setting reminders, or playing your favourite music. Additionally, the Shortcuts app allows you to create personalised shortcuts with multiple steps, which can save you significant time and effort.
 
-However, the app creates an empty folder on your iCloud Drive every time it's opened. While it's possible to store files in this folder, it's often left empty and can become a nuisance. Although deleting the folder manually is harmless, it can be time-consuming and bothersome. This is where a simple utility comes in handy. By automatically deleting the folder every time the Shortcuts app is opened, this utility can keep your iCloud Drive free of clutter.
+However, the app creates an empty folder on your iCloud Drive every time it's opened. While it's possible to store files in this folder, it's often left empty and can become a nuisance. Although deleting the folder manually is harmless, it can be time-consuming and bothersome. This is where a simple utility comes in handy. This utility helps by automatically removing this redundant folder if it's empty, ensuring your iCloud Drive remains clutter-free.
 
 <p align="center">
   <picture>
@@ -18,38 +18,47 @@ However, the app creates an empty folder on your iCloud Drive every time it's op
 
 ## Getting Started
 
-### Installation
+Here are the two methods you can choose from:
 
-This will download the repository via curl:
+**Automatic Download via `curl`**: Simply execute the following command in your terminal to quickly download and seamlessly install the utility:
 
 ```shell
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/nicolodiamante/norflow/HEAD/bootstrap.sh)"
 ```
 
-Alternatively, you can clone the repository manually:
+**Manual Cloning**: For those who prefer a hands-on approach, you can manually clone the repository to your desired location:
 
 ```shell
-git clone https://github.com/nicolodiamante/norflow.git
+git clone https://github.com/nicolodiamante/norflow.git ~/norflow
 ```
 
-Once you have downloaded the repository, you can navigate into its directory in the terminal and paste the following code:
+<br>
+
+### Post-Download Steps
+
+**Directory Navigation & Script Execution**: Navigate to the repository's `utils` directory and execute the installation script:
 
 ```shell
-cd utils && source install.sh
+source install.sh
 ```
 
-The script will make a copy of the agent files into `~/Library/LaunchAgents`.
+**Norflow Configuration**: Running the script will efficiently copy the agent files to `~/Library/LaunchAgents`, ensuring Norflow is seamlessly integrated into your system.
 <br><br>
 
 ### How It Works
 
-The agent is a program or service that is specifically designed to perform a particular task at regular intervals. In this case, the agent is responsible for running a script that checks for the presence of the Shortcuts folder in iCloud Drive every 300 seconds. This ensures that the folder is not present in iCloud Drive.
+**Agent**: A specialised program designed to perform tasks at set intervals. In the context of this utility, the agent's primary function is to scan your iCloud Drive at regular intervals.
 
-If the script detects the presence of the Shortcuts folder, it will then check to see if the folder is empty or not. This is an important step, as it ensures that no valuable data is accidentally deleted. If the folder is found to be empty, the script will then proceed to delete the folder, freeing up storage space and further organising iCloud Drive.
+**Scan Frequency**: The agent initiates a scan every 300 seconds to detect the presence of the Shortcuts folder in iCloud Drive.
 
-This process is important because it helps to keep your iCloud Drive clean and organized, which can be a challenge with the amount of data that we accumulate and store on our devices. By automating this process with an agent and a script, you can ensure that your iCloud Drive remains organized and efficient, without having to manually check and delete unnecessary folders and files.
+**Deletion Criteria**: Upon detecting the Shortcuts folder, if it's empty, the folder is deleted. This step ensures that no important data is inadvertently removed.
 
-Overall, the agent and script combination provide an effective and efficient solution for managing your iCloud Drive, ensuring that it remains organized and free of unnecessary clutter, which in turn can help improve your productivity and workflow.
+#### Benefits
+
+- **Automated Cleanup**: Keep the iCloud Drive clean by auto-deleting a frequently empty folder.
+- **Efficiency**: Eliminates the need for manual checks or deletions, ensuring a consistently organised iCloud Drive.
+
+In summary, this combination of agent and script delivers a seamless solution for maintaining an orderly iCloud Drive. By reducing unnecessary clutter, it paves the way for enhanced productivity and an improved workflow.
 <br><br>
 
 ## Notes
@@ -83,6 +92,7 @@ Any suggestions or feedback you may have for improvement are welcome. If you enc
 </p>
 
 <!-- Link labels: -->
+
 [apple-shortcuts]: https://support.apple.com/en-gb/guide/shortcuts/welcome/ios
 [apple-guide]: https://support.apple.com/en-gb/guide/shortcuts/apdf22b0444c/6.0/ios/16.0
 [issues]: https://github.com/nicolodiamante/norflow/issues
