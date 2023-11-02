@@ -45,7 +45,7 @@ source install.sh
 **Norflow Configuration**: Running the script will efficiently copy the agent files to `~/Library/LaunchAgents`, ensuring Norflow is seamlessly integrated into your system.
 <br><br>
 
-### How It Works
+## How It Works
 
 **Agent**: A specialised program designed to perform tasks at set intervals. In the context of this utility, the agent's primary function is to scan your iCloud Drive at regular intervals.
 
@@ -53,10 +53,10 @@ source install.sh
 
 **Deletion Criteria**: Upon detecting the Shortcuts folder, if it's empty, the folder is deleted. This step ensures that no important data is inadvertently removed.
 
-#### Benefits
+### Benefits
 
 - **Automated Cleanup**: Keep the iCloud Drive clean by auto-deleting a frequently empty folder.
-- **Efficiency**: Eliminates the need for manual checks or deletions, ensuring a consistently organised iCloud Drive.
+- **Efficiency**: Removes manual checks, keeping iCloud Drive tidy.
 
 In summary, this combination of agent and script delivers a seamless solution for maintaining an orderly iCloud Drive. By reducing unnecessary clutter, it paves the way for enhanced productivity and an improved workflow.
 <br><br>
