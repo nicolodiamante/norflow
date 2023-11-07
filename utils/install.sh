@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #
 # Install Norflow
@@ -20,19 +20,31 @@ fi
 
 # Define paths
 LIB_AGENTS="${HOME}/Library/LaunchAgents"
-AGENT_SOURCE="./agent/com.shell.Norflow.plist"
+AGENT_SOURCE="${HOME}/norflow/agent/com.shell.Norflow.plist"
 AGENT_TARGET="${LIB_AGENTS}/com.shell.Norflow.plist"
 
-# Create necessary directories if they don't exist
-[[ ! -d "$LIB_AGENTS" ]] && mkdir -p "$LIB_AGENTS"
+# Ensure the LaunchAgents directory exists
+if [[ ! -d "$LIB_AGENTS" ]]; then
+  mkdir -p "${LIB_AGENTS}" || { echo "Failed to create LaunchAgents directory." >&2; exit 1; }
+fi
 
-# Create or overwrite the symbolic link from the agent directory to LIB_AGENTS
-ln -sf "$AGENT_SOURCE" "$AGENT_TARGET"
+# Create or update the symbolic link for the agent
+if ln -sf "${AGENT_SOURCE}" "${AGENT_TARGET}"; then
+  echo "Symbolic link created/updated for Norflow agent."
+else
+  echo "Error: Failed to create symbolic link for Norflow agent." >&2
+  exit 1
+fi
 
 # Load the agent if the source exists
-if [[ -f "${AGENT_SOURCE}" ]]; then
-  launchctl load "${AGENT_TARGET}"
+if [[ -f "$AGENT_SOURCE" ]]; then
+  if launchctl load "${AGENT_TARGET}"; then
+    echo "Norflow agent loaded successfully."
+  else
+    echo "Error: Failed to load the Norflow agent." >&2
+    exit 1
+  fi
 else
-  echo "Error: Norflow agent source plist file not found."
+  echo "Error: Norflow agent source plist file not found." >&2
   exit 1
 fi

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #
 # Uninstall Norflow
@@ -8,24 +8,23 @@
 LIB_AGENTS="${HOME}/Library/LaunchAgents"
 AGENT="${LIB_AGENTS}/com.shell.Norflow.plist"
 
-# Remove the agent from launchd if the plist file exists
-if [[ -f "${AGENT}" ]]; then
-  launchctl remove "${AGENT}"
-  if [[ $? -eq 0 ]]; then
-    echo "Successfully removed the agent."
-  else
-    echo "Failed to remove the agent." >&2
-  fi
-fi
-
-# Check if the file is a symlink before attempting to remove
+# Check if the file exists and is a symlink before attempting to remove.
 if [[ -L "${AGENT}" ]]; then
-  # Remove the agent file
+  # Unload the agent if it was loaded.
+  if launchctl list | grep -q "$(basename "${AGENT}" .plist)"; then
+    launchctl unload "${AGENT}" 2>/dev/null && echo "Agent unloaded successfully." || { echo "Failed to unload the agent."; exit 1; }
+  fi
+
+  # Remove the symlink.
   if rm -f "${AGENT}"; then
     echo "Successfully removed the agent symlink."
   else
     echo "Failed to remove the agent symlink." >&2
+    exit 1
   fi
+elif [[ -f "${AGENT}" ]]; then
+  echo "The agent file exists but is not a symlink. Manual removal required." >&2
+  exit 1
 else
-  echo "The agent file is not a symlink or does not exist." >&2
+  echo "The agent file does not exist. No removal necessary."
 fi

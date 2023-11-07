@@ -6,7 +6,7 @@
     <string>com.shell.Norflow</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/bin/sh</string>
+      <string>/bin/zsh</string>
       <string>-c</string>
       <string>exec $HOME/norflow/script/norflow.zsh</string>
     </array>
