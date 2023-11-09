@@ -1,18 +1,21 @@
 #!/bin/zsh
 
-# Check if the current shell is zsh.
-[[ "$SHELL" == */zsh ]] || { echo "Error: Please switch to the zsh shell to continue."; exit 1; }
+# Determines the current user's shell.
+if [[ "$SHELL" != */zsh ]]; then
+  echo "Please switch to zsh shell to continue."
+  exit 1
+fi
 
-# Define paths.
+# Defines the PATHs.
 SOURCE="https://github.com/nicolodiamante/norflow"
 TARBALL="${SOURCE}/tarball/master"
 TARGET="${HOME}/norflow"
-TAR_CMD="tar -xzv -C \"${TARGET}\" --strip-components=1 --exclude='{.gitignore,*.md}'"
+TAR_CMD="tar -xzv -C \"${TARGET}\" --strip-components 1 --exclude .gitignore"
 INSTALL="${TARGET}/utils/install.sh"
 
 # Check if a command is executable.
 is_executable() {
-  command -v "$1" >/dev/null 2>&1
+  command -v "$1" &> /dev/null
 }
 
 # Ensure the TARGET directory doesn't already exist.
@@ -23,7 +26,7 @@ fi
 
 # Checks which executable is available then downloads and installs.
 if is_executable "git"; then
-  CMD="git clone ${SOURCE} \"${TARGET}\""
+  CMD="git clone ${SOURCE} ${TARGET}"
 elif is_executable "curl"; then
   CMD="curl -L ${TARBALL} | ${TAR_CMD}"
 elif is_executable "wget"; then
@@ -36,11 +39,22 @@ fi
 echo 'Installing Norflow...'
 
 # Create the target directory and proceed with the chosen download method.
-mkdir -p "${TARGET}" || { echo "Error: Failed to create target directory. Aborting!" >&2; exit 1; }
+if ! mkdir -p "${TARGET}"; then
+  echo "Error: Failed to create target directory. Aborting!" >&2
+  exit 1
+fi
 
 # Execute the download command and run the installation script.
 if eval "${CMD}"; then
-  cd "${TARGET}" && source "${INSTALL}" || { echo "Error: Failed to navigate to ${TARGET} or run the install script. Aborting!" >&2; exit 1; }
+  if cd "${TARGET}"; then
+    if ! source "${INSTALL}"; then
+      echo "Error: Failed to run the install script. Aborting!" >&2
+      exit 1
+    fi
+  else
+    echo "Error: Failed to navigate to ${TARGET}. Aborting!" >&2
+    exit 1
+  fi
 else
   echo "Download failed. Aborting!" >&2
   exit 1
