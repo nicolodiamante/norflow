@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 #
-# Install Norflow
+# Install Norflow.
 #
 
 # Validate OS and version.

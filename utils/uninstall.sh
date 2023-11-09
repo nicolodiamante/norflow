@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 #
-# Uninstall Norflow
+# Uninstall Norflow.
 #
 
 # Defines the PATHs.
