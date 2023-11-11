@@ -4,9 +4,16 @@
 # Start Norflow Installation.
 #
 
+
+# Validate OS.
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  echo "This script is only compatible with macOS" >&2
+  exit 1
+fi
+
 # Determines the current user's shell.
 if [[ "$SHELL" != */zsh ]]; then
-  echo "Please switch to zsh shell to continue."
+  echo "Please switch to zsh shell to continue." >&2
   exit 1
 fi
 

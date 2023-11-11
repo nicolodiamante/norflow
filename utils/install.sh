@@ -4,9 +4,9 @@
 # Install Norflow.
 #
 
-# Validate OS and version.
+# Validate OS.
 if [[ "$OSTYPE" != "darwin"* ]]; then
-  echo "Error: This script is only compatible with macOS."
+  echo "This script is only compatible with macOS" >&2
   exit 1
 fi
 
