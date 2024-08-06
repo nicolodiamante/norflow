@@ -4,13 +4,20 @@
 # Uninstall Norflow.
 #
 
-# Defines the PATHs.
+# Define the PATHs.
 LIB_AGENTS="${HOME}/Library/LaunchAgents"
 AGENT="${LIB_AGENTS}/com.shell.Norflow.plist"
+
+# Check if launchctl is available
+if ! command -v launchctl &> /dev/null; then
+  echo "Error: launchctl command not found." >&2
+  exit 1
+fi
 
 # Check if the file exists and is a symlink before attempting to remove.
 if [[ -L "${AGENT}" ]]; then
   echo "Removing the agent symlink..."
+
   # Unload the agent if it was loaded.
   agent_name=$(basename "${AGENT}" .plist)
   if launchctl list | grep -q "${agent_name}"; then

@@ -12,13 +12,13 @@ fi
 
 # Validate macOS version.
 SW_VERS=$(sw_vers -buildVersion)
-OS_VERS=$(sed -E -e 's/([0-9]{2}).*/\1/' <<<"$SW_VERS")
+OS_VERS=$(sed -E -e 's/^([0-9]{2}).*/\1/' <<<"$SW_VERS")
 if [[ "$OS_VERS" -lt 21 ]]; then
-  echo "Error: Norflow requires macOS 12.6.1 Monterey or later."
+  echo "Error: Norflow requires macOS 12.6.1 Monterey or later." >&2
   exit 1
 fi
 
-# Defines the PATHs.
+# Define the PATHs.
 LIB_AGENTS="${HOME}/Library/LaunchAgents"
 AGENT_SOURCE="${HOME}/norflow/agent/com.shell.Norflow.plist"
 AGENT_TARGET="${LIB_AGENTS}/com.shell.Norflow.plist"
@@ -38,6 +38,19 @@ if ln -sf "${AGENT_SOURCE}" "${AGENT_TARGET}"; then
 else
   echo "Error: Failed to create symbolic link for Norflow agent." >&2
   exit 1
+fi
+
+# Check if launchctl is available
+if ! command -v launchctl &> /dev/null; then
+  echo "Error: launchctl command not found." >&2
+  exit 1
+fi
+
+# Unload the agent if it is already loaded.
+if launchctl list | grep -q "com.shell.Norflow"; then
+  if ! launchctl unload "${AGENT_TARGET}"; then
+    echo "Warning: Failed to unload the existing Norflow agent." >&2
+  fi
 fi
 
 # Load the agent if the source exists.
